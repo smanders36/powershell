@@ -1,0 +1,13 @@
+## this script will copy all the groups that a user is a member of, and put a second user into all the same groups. useful for giving access to folders
+## when an exisitng user needs to have the same access as someone else ##
+
+###################################################################################
+##   lets grab the username of who we are copying, and who we are copying too    ##
+Write-Host 'what is the username of the user we are copying?'
+$user = Read-Host
+write-host 'what is the username of the user we are giving the copy to?'
+$user2 = Read-Host
+## this next bit does all the magic. gets aduser and passes their 'memberof' info along to 'add-adgroup' 
+get-aduser -identity $user -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -members $user2 -Confirm
+## the confirm prompt at the end isn't necessary, but makes it less likely you add them to something you might not want
+
